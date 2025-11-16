@@ -1,33 +1,41 @@
 // src/server.js
 
+//* Import dependencies
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 
+//* Import database connection
 import { connectMongoDB } from './db/connectMongoDB.js';
+
+//* Import middleware
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
-import studentsRoutes from './routes/studentsRoutes.js';
+//* Import routes
+import notesRoutes from './routes/notesRoutes.js';
 
+//* Initialize Express app
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
-// глобальні middleware
+//* Global middleware
 app.use(logger);
 app.use(express.json());
 app.use(cors());
 
-// підключаємо групу маршрутів студента
-app.use(studentsRoutes);
+//* Connect routes
+app.use(notesRoutes);
 
-// 404 і обробник помилок — наприкінці ланцюжка
+//* 404 handler and error handler
 app.use(notFoundHandler);
 app.use(errorHandler);
 
+//* Start the server
 await connectMongoDB();
 
+//* Listen on the specified port
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
