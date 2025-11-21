@@ -27,19 +27,6 @@ app.use(
   })
 );
 
-// Middleware для обробки помилок
-app.use((err, req, res, next) => {
-  console.error(err);
-
-  const isProd = process.env.NODE_ENV === 'production';
-
-  res.status(500).json({
-    message: isProd
-      ? 'Something went wrong. Please try again later.'
-      : err.message,
-  });
-});
-
 app.get('/notes', (req, res) => {
   console.log(req.body); // тепер тіло доступне як JS-об`єкт
   res.status(200).json({ message: 'Retrieved all notes' });
@@ -66,10 +53,14 @@ app.use((req, res) => {
 
 // Middleware для обробки помилок
 app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
+  console.error(err);
+
+  const isProd = process.env.NODE_ENV === 'production';
+
   res.status(500).json({
-    message: 'Internal Server Error',
-    error: err.message,
+    message: isProd
+      ? 'Something went wrong. Please try again later.'
+      : err.message,
   });
 });
 
