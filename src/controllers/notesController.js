@@ -3,12 +3,31 @@ import { Note } from '../models/note.js';
 
 //* Get all notes
 export const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
+  const { page = 1, perPage = 10 } = req.query;
+  const skip = (page - 1) * perPage;
+
+  const notesQuery = Note.find().skip(skip).limit(perPage);
+
+  const [totalItems, notes] = await Promise.all([
+    notesQuery.clone().countDocuments(),
+    notesQuery.skip(skip).limit(perPage),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  res.status(200).json({
+    notes,
+    pagination: {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      perPage,
+    },
+  });
 };
 
 //* Get a note by id
-export const getNoteById = async (req, res, next) => {
+export const getNote = async (req, res, next) => {
   const { noteId } = req.params;
   const note = await Note.findById(noteId);
 
@@ -27,7 +46,7 @@ export const createNote = async (req, res) => {
 };
 
 //* Delete a note by id
-export const deleteNoteById = async (req, res, next) => {
+export const deleteNote = async (req, res, next) => {
   const { noteId } = req.params;
   const note = await Note.findByIdAndDelete(noteId);
 
@@ -40,7 +59,7 @@ export const deleteNoteById = async (req, res, next) => {
 };
 
 //* Update a note by id
-export const updateNoteById = async (req, res, next) => {
+export const updateNote = async (req, res, next) => {
   const { noteId } = req.params;
 
   const note = await Note.findOneAndUpdate(

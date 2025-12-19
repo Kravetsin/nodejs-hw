@@ -4,6 +4,7 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import { errors } from 'celebrate';
 
 //* Import database connection
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -30,6 +31,7 @@ app.use(notesRoutes);
 
 //* 404 handler and error handler
 app.use(notFoundHandler);
+app.use(errors());
 app.use(errorHandler);
 
 //* Start the server
