@@ -8,7 +8,7 @@ export const getAllNotes = async (req, res) => {
 };
 
 //* Get a note by id
-export const getNoteById = async (req, res, next) => {
+export const getNote = async (req, res, next) => {
   const { noteId } = req.params;
   const note = await Note.findById(noteId);
 
@@ -27,7 +27,7 @@ export const createNote = async (req, res) => {
 };
 
 //* Delete a note by id
-export const deleteNoteById = async (req, res, next) => {
+export const deleteNote = async (req, res, next) => {
   const { noteId } = req.params;
   const note = await Note.findByIdAndDelete(noteId);
 
@@ -40,7 +40,7 @@ export const deleteNoteById = async (req, res, next) => {
 };
 
 //* Update a note by id
-export const updateNoteById = async (req, res, next) => {
+export const updateNote = async (req, res, next) => {
   const { noteId } = req.params;
 
   const note = await Note.findOneAndUpdate(
