@@ -11,6 +11,7 @@ import {
   getAllNotesSchema,
   noteIdSchema,
   updateNoteSchema,
+  createNoteSchema,
 } from '../validations/notesValidation.js';
 
 const router = Router();
@@ -22,7 +23,7 @@ router.get('/notes', celebrate(getAllNotesSchema), getAllNotes);
 router.get('/notes/:noteId', celebrate(noteIdSchema), getNote);
 
 //* Route to create a new note
-router.post('/notes', createNote);
+router.post('/notes', celebrate(createNoteSchema), createNote);
 
 //* Route to delete a note by id
 router.delete('/notes/:noteId', celebrate(noteIdSchema), deleteNote);

@@ -1,5 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
+import { TAGS } from '../constants/tags.js';
 
 // Custom validator for MongoDB ObjectId
 const objectIdValidator = (value, helpers) => {
@@ -22,18 +23,7 @@ export const createNoteSchema = {
     }),
     content: Joi.string().allow(''),
     tag: Joi.string()
-      .valid(
-        'Work',
-        'Personal',
-        'Meeting',
-        'Shopping',
-        'Ideas',
-        'Travel',
-        'Finance',
-        'Health',
-        'Important',
-        'Todo'
-      )
+      .valid(...TAGS)
       .messages({
         'any.only': 'Tag must be one of the predefined values',
       }),
@@ -45,6 +35,12 @@ export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
+    tag: Joi.string()
+      .valid(...TAGS)
+      .messages({
+        'any.only': 'Tag must be one of the predefined values',
+      }),
+    search: Joi.string().trim().allow(''),
   }),
 };
 
@@ -59,18 +55,7 @@ export const updateNoteSchema = {
     }),
     content: Joi.string().allow(''),
     tag: Joi.string()
-      .valid(
-        'Work',
-        'Personal',
-        'Meeting',
-        'Shopping',
-        'Ideas',
-        'Travel',
-        'Finance',
-        'Health',
-        'Important',
-        'Todo'
-      )
+      .valid(...TAGS)
       .messages({
         'any.only': 'Tag must be one of the predefined values',
       }),
