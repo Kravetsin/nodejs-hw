@@ -4,7 +4,7 @@ import { User } from '../models/user.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
 import { Session } from '../models/session.js';
 
-//* User registration
+//! User registration
 export const registerUser = async (req, res) => {
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
   res.status(201).json(newUser);
 };
 
-//* User login
+//! User login
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -53,4 +53,53 @@ export const loginUser = async (req, res) => {
 
   //* Respond with the logged-in user (excluding password)
   res.status(200).json(user);
+};
+
+//! User logout
+export const logoutUser = async (req, res) => {
+  const { sessionId } = req.cookies;
+
+  if (sessionId) {
+    await Session.findByIdAndDelete(sessionId);
+  }
+
+  res.clearCookie('sessionId');
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+
+  res.status(200).json({ message: 'Logged out successfully' });
+};
+
+//! Refresh session
+export const refreshSession = async (req, res) => {
+  const session = await Session.findOne({
+    _id: req.cookies.sessionId,
+    refreshToken: req.cookies.refreshToken,
+  });
+
+  //* Validate session
+  if (!session) {
+    throw createHttpError(401, 'Invalid session');
+  }
+
+  //* Check if refresh token is expired
+  const isSessionTokenExpired =
+    new Date() > new Date(session.refreshTokenValidUntil);
+
+  //* If expired, throw error
+  if (isSessionTokenExpired) {
+    throw createHttpError(401, 'Session has expired');
+  }
+
+  //* Create new session and set cookies
+  await Session.deleteOne({
+    _id: req.cookies.sessionId,
+    refreshToken: req.cookies.refreshToken,
+  });
+
+  //* Create new session and set cookies
+  const newSession = await createSession(session.userId);
+  setSessionCookies(res, newSession);
+
+  res.status(200).json({ message: 'Session refreshed successfully' });
 };
