@@ -16,6 +16,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 //* Import routes
 import notesRoutes from './routes/notesRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 //* Initialize Express app
 const app = express();
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(cors());
 
 //* Connect routes
+app.use(authRoutes);
 app.use(notesRoutes);
 
 //* 404 handler and error handler
