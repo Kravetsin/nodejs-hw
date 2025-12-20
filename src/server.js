@@ -1,10 +1,9 @@
-// src/server.js
-
 //* Import dependencies
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import { errors } from 'celebrate';
+import cookieParser from 'cookie-parser';
 
 //* Import database connection
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -26,6 +25,7 @@ const PORT = process.env.PORT ?? 3000;
 app.use(logger);
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 //* Connect routes
 app.use(authRoutes);
