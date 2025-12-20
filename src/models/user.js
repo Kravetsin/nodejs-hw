@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 
+//! Schema for User model
 const userSchema = new Schema(
   {
     username: { type: String, trim: true },
@@ -11,12 +12,14 @@ const userSchema = new Schema(
   }
 );
 
+//! Pre-save hook to set username if not provided
 userSchema.pre('save', function () {
   if (!this.username) {
     this.username = this.email.split('@')[0];
   }
 });
 
+//! Method to exclude password from returned user object
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
