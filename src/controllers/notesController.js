@@ -7,9 +7,7 @@ export const getAllNotes = async (req, res) => {
   const skip = (page - 1) * perPage;
 
   //* Build query with optional filters
-  const notesQuery = Note.find({ userId: req.user._id })
-    .skip(skip)
-    .limit(perPage);
+  const notesQuery = Note.find({ userId: req.user._id });
 
   //* Apply tag filter if provided
   if (tag) {
