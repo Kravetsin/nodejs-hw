@@ -103,3 +103,14 @@ export const refreshSession = async (req, res) => {
 
   res.status(200).json({ message: 'Session refreshed successfully' });
 };
+
+//! Request password reset
+export const requestResetEmail = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  res.status(200).json({
+    message: 'If that email is registered, a reset link has been sent.',
+  });
+};

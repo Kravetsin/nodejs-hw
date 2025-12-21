@@ -26,3 +26,13 @@ export const loginUserSchema = {
     }),
   }),
 };
+
+//* Schema for resetting password
+export const requestResetEmailSchema = {
+  [Segments.BODY]: Joi.object({
+    email: Joi.string().email().required().messages({
+      'string.email': 'Email must be a valid email address',
+      'any.required': 'Email is required',
+    }),
+  }),
+};
