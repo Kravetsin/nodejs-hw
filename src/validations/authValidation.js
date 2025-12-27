@@ -1,6 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 
-//* Schema for user registration
+//! Schema for user registration
 export const registerUserSchema = {
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required().messages({
@@ -14,7 +14,7 @@ export const registerUserSchema = {
   }),
 };
 
-//* Schema for user login
+//! Schema for user login
 export const loginUserSchema = {
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required().messages({
@@ -27,12 +27,25 @@ export const loginUserSchema = {
   }),
 };
 
-//* Schema for resetting password
+//! Schema for resetting password
 export const requestResetEmailSchema = {
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required().messages({
       'string.email': 'Email must be a valid email address',
       'any.required': 'Email is required',
+    }),
+  }),
+};
+
+//! Reset password schema
+export const resetPasswordSchema = {
+  [Segments.BODY]: Joi.object({
+    token: Joi.string().required().messages({
+      'any.required': 'Reset token is required',
+    }),
+    password: Joi.string().min(8).required().messages({
+      'string.min': 'New password must be at least 8 characters long',
+      'any.required': 'New password is required',
     }),
   }),
 };
